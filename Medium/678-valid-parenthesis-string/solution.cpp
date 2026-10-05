@@ -22,3 +22,41 @@ public:
         
     }
 };
+//2 recurssion and memomization
+class Solution {
+public:
+    int t[101][101];
+    bool solve(string& s,int idx,int open
+        if(idx == s.size()){
+            return open == 0;
+        }
+        if(t[idx][open] != -1){
+            return t[idx][open];
+        }
+        if(s[idx] == '('){
+            return t[idx][open] = solve(s,idx + 1,open + 1);
+        }
+        if(s[idx] == ')'){
+            if(open > 0){
+                return t[idx][open] = solve(s,idx + 1,open - 1);
+            }
+            return t[idx][open] = false;
+        }
+        if(s[idx] =='*'){
+            if(solve(s,idx + 1,open)){
+                return t[idx][open] = true;
+            }
+            if(solve(s,idx + 1,open + 1)){
+                return t[idx][open] = true;
+            }
+            if(open > 0 && solve(s,idx + 1,open - 1)){
+                return t[idx][open] = true;
+            }
+        }
+        return t[idx][open] = false;
+    }
+    bool checkValidString(string s) {
+        memset(t,-1,sizeof(t));
+        return solve(s,0,0);
+    }
+};
